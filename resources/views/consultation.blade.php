@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طلب استشارة مجانية | Future Logic Systems</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght=400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -28,25 +28,33 @@
                 <p class="text-textMuted text-sm">أرسل لنا تفاصيل فكرتك أو النظام الذي تحتاجه، وسيتواصل معك المهندس حمزة وفريق عمله فوراً</p>
             </div>
 
-            <form action="#" method="POST" class="space-y-5">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                        <label class="block text-sm font-600 mb-2 text-textMuted">الاسم الكريم</label>
-                        <input type="text" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-600 mb-2 text-textMuted">البريد الإلكتروني أو الواتساب</label>
-                        <input type="text" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo">
-                    </div>
+            @if(session('success'))
+                <div class="bg-emerald-500/10 border border-emerald-500 text-emerald-400 p-4 rounded-xl mb-6 text-center font-bold text-sm animate-pulse">
+                    ✨ {{ session('success') }}
                 </div>
-                <div>
-                    <label class="block text-sm font-600 mb-2 text-textMuted">تفاصيل الفكرة أو النظام المطلوب</label>
-                    <textarea rows="5" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo resize-none" placeholder="اكتب هنا ما تدور حوله فكرتك المتوقعة..."></textarea>
-                </div>
-                <button type="submit" class="w-full bg-accent text-darkBg font-bold py-3 rounded-xl hover:bg-white transition shadow-lg shadow-accent/10">
-                    إرسال الطلب للمناقشة والدراسة 🚀
-                </button>
-            </form>
+            @endif
+
+               <form action="{{ route('consultation.store') }}" method="POST" class="space-y-5">
+    @csrf
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+            <label class="block text-sm font-600 mb-2 text-textMuted">الاسم الكريم</label>
+            <input type="text" name="name" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo">
+        </div>
+        <div>
+            <label class="block text-sm font-600 mb-2 text-textMuted">البريد الإلكتروني أو الواتساب</label>
+            <input type="text" name="email" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo">
+        </div>
+    </div>
+    <div>
+        <label class="block text-sm font-600 mb-2 text-textMuted">تفاصيل الفكرة أو النظام المطلوب</label>
+        <textarea name="message" rows="5" required class="w-full bg-darkBg border border-borderColor rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent font-cairo resize-none" placeholder="اكتب هنا ما تدور حوله فكرتك المتوقعة..."></textarea>
+    </div>
+    <button type="submit" class="w-full bg-accent text-darkBg font-bold py-3 rounded-xl hover:bg-white transition shadow-lg shadow-accent/10">
+        إرسال الطلب للمناقشة والدراسة 🚀
+    </button>
+</form>
         </div>
     </main>
 
