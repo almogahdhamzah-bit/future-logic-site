@@ -1,4 +1,4 @@
-Set-Content -Path "vercel.json" -Value '{
+ $jsonContent = '{
     "version": 2,
     "outputDirectory": "public",
     "functions": {
@@ -13,3 +13,4 @@ Set-Content -Path "vercel.json" -Value '{
         }
     ]
 }'
+Set-Content -Path "vercel.json" -Value $jsonContent
