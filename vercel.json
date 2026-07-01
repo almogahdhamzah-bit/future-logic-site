@@ -1,4 +1,4 @@
- $jsonContent = '{
+{
     "version": 2,
     "outputDirectory": "public",
     "functions": {
@@ -12,5 +12,4 @@
             "dest": "api/index.php"
         }
     ]
-}'
-Set-Content -Path "vercel.json" -Value $jsonContent
+}
