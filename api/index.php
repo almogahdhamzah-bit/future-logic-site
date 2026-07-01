@@ -1,6 +1,11 @@
 <?php
 
-// 1. توجيه الكاش والتخزين للمجلد المؤقت لإصلاح الـ Read-only
+// 1. تفعيل عرض الأخطاء بالكامل على الشاشة لكسر خطأ 500 الصامت
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// 2. توجيه الكاش والتخزين للمجلد المؤقت
 $storagePath = '/tmp/storage/framework';
 foreach (['/views', '/sessions', '/cache'] as $path) {
     if (!is_dir($storagePath . $path)) {
@@ -11,19 +16,30 @@ foreach (['/views', '/sessions', '/cache'] as $path) {
 putenv("APP_STORAGE=/tmp/storage");
 putenv("VIEW_COMPILED_PATH=/tmp/storage/framework/views");
 
-// 2. تحديد المسار الثابت والصارم لبيئة Vercel
-$basePath = __DIR__ . '/..';
+// 3. تحديد المسار واستدعاء المكونات محاطة بـ Try-Catch لقفص أي خطأ
+try {
+    $basePath = __DIR__ . '/..';
 
-// 3. استدعاء المكونات الأساسية بشكل مباشر ومضمون
-require $basePath . '/vendor/autoload.php';
-$app = require_once $basePath . '/bootstrap/app.php';
+    if (!file_exists($basePath . '/vendor/autoload.php')) {
+        die("Fatal Error: vendor/autoload.php not found at: " . realpath($basePath));
+    }
 
-// 4. تشغيل وإقلاع التطبيق
-$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+    require $basePath . '/vendor/autoload.php';
+    $app = require_once $basePath . '/bootstrap/app.php';
 
-$response = $kernel->handle(
-    $request = Illuminate\Http\Request::capture()
-);
+    $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-$response->send();
-$kernel->terminate($request, $response);
+    $response = $kernel->handle(
+        $request = Illuminate\Http\Request::capture()
+    );
+
+    $response->send();
+    $kernel->terminate($request, $response);
+
+} catch (\Throwable $e) {
+    // إذا انهار لارافيل داخلياً، سيطبع السبب هنا بدلاً من خطأ 500
+    echo "<h1>Laravel Runtime Exception:</h1>";
+    echo "<p><strong>Message:</strong> " . $e->getMessage() . "</p>";
+    echo "<p><strong>File:</strong> " . $e->getFile() . " on line " . $e->getLine() . "</p>";
+    echo "<pre>" . $e->getTraceAsString() . "</pre>";
+}
