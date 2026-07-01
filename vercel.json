@@ -1,5 +1,6 @@
-{
+Set-Content -Path "vercel.json" -Value '{
     "version": 2,
+    "outputDirectory": "public",
     "functions": {
         "api/index.php": {
             "runtime": "vercel-php@0.7.2"
@@ -11,4 +12,4 @@
             "dest": "api/index.php"
         }
     ]
-}
+}'
